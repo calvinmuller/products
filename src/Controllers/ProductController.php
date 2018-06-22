@@ -46,14 +46,12 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return Product
      */
     public function show(Product $product)
     {
 
-        $extendedProduct = new $product->class;
-
-        return $extendedProduct->find($product->reference_id);
+        return $product;
 
     }
 

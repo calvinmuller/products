@@ -3,6 +3,7 @@
 namespace Istreet\Products;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 
 class Product extends Model
@@ -18,6 +19,10 @@ class Product extends Model
         'data' => 'array',
         'price' => 'float',
         'retail_price' => 'float'
+    ];
+
+    protected $hidden = [
+        'class'
     ];
 
     protected $with = [
@@ -66,6 +71,16 @@ class Product extends Model
 
 
     /**
+     * Update name attribute
+     * @param $value
+     */
+    public function setNameAttribute($value) {
+        $this->attributes['slug'] = Str::slug($value);
+        $this->attributes['name'] = $value;
+    }
+
+
+    /**
      * Remove the eB
      * @param $value
      */
@@ -73,5 +88,32 @@ class Product extends Model
     {
         $ebucks = str_replace("eB", "", $value);
         $this->attributes['ebucks'] = $ebucks;
+    }
+
+
+    /**
+     * Remove the %
+     * @param $value
+     */
+    public function setSavingAttribute($value)
+    {
+        $saving = str_replace("%", "", $value);
+        $this->attributes['saving'] = $saving;
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function alerts()
+    {
+        return $this->hasMany(Alert::class);
+    }
+
+
+    // Product model
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

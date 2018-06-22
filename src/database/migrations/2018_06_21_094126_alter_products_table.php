@@ -16,6 +16,7 @@ class AlterProductsTable extends Migration
         //
         Schema::table('products', function (Blueprint $table) {
 
+            $table->string('slug')->nullable();
             $table->integer('old_selling_price')->nullable();
             $table->string('external_id')->index();
             $table->string('saving')->nullable();
