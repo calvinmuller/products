@@ -3,45 +3,35 @@
 namespace Istreet\Products\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
-use Istreet\Products\Spree;
-use Spree\Brand;
-use Superbalist\Brand as SBrand;
-use Superbalist\Department;
-use Superbalist\Product;
+use Istreet\Products\Suppliers\Zando;
+use Istreet\Products\Suppliers\Zando\Brands;
 
-class SpreeIndex extends Command
+class ZandoIndex extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'spree:index';
+    protected $signature = 'zando:index';
 
     private $department;
     private $product;
     private $brand;
-
-//    private $departments = [
-//        'men',
-//        'women',
-//        'apartment'
-//    ];
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Index Spree';
+    protected $description = 'Index Products on Zando';
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(Brand $brand)
+    public function __construct(Brands $brand)
     {
         parent::__construct();
 
@@ -248,26 +238,14 @@ class SpreeIndex extends Command
 
         foreach ($brands as $item) {
 
-            $brand = \Istreet\Products\Brand::findOrCreate($item->name, [
-                'reference_id' => $item->id,
-                'name' => $item->name,
-                'slug' => Str::slug($item->name),
-                'class' => Spree::class,
+            $brand = \Istreet\Products\Brand::findOrCreate($item->label, [
+                'reference_id' => $item->catalogContext->brand,
+                'name' => $item->label,
+                'slug' => $item->name,
+                'class' => Zando::class,
             ]);
 
             $brand->save();
-
-            $base = 'https://spree.co.za/media/';
-
-            $brand->asset()->updateOrCreate([
-                'full_size' => $base . $item->desktop_image
-            ], [
-                'extension' => '',
-                'full_size' => $base. $item->desktop_image,
-                'url' => $base . $item->desktop_image,
-                'thumb' => $base . $item->mobile_image,
-                'tiny' => $base . $item->app_image,
-            ]);
 
             $bar->advance();
         }

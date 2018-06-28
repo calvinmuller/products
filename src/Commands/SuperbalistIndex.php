@@ -3,6 +3,7 @@
 namespace Istreet\Products\Commands;
 
 use Illuminate\Console\Command;
+use Istreet\Products\Superbalist;
 use Superbalist\Brand as SBrand;
 use Superbalist\Department;
 use Superbalist\Product;
@@ -252,6 +253,7 @@ class SuperbalistIndex extends Command
             $brand = \Istreet\Products\Brand::findOrCreate($item->name, [
                 'reference_id' => $item->id,
                 'name' => $item->name,
+                'class' => Superbalist::class,
                 'slug' => $item->slug,
             ]);
 

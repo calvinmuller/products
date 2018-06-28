@@ -17,9 +17,12 @@ class CreateSuppliersTable extends Migration
             $table->increments('id');
 
             $table->string('name');
-            $table->string('address');
-            $table->string('logo');
-            $table->string('email');
+            $table->string('address')->nullable();
+            $table->string('logo')->nullable();
+            $table->string('class');
+            $table->longText('identifier');
+            $table->boolean('has_cart')->default(true);
+            $table->string('email')->nullable();
 
             $table->timestamps();
         });

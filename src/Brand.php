@@ -16,6 +16,10 @@ class Brand extends Model
         'asset'
     ];
 
+    protected $hidden = [
+        'class'
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
@@ -43,5 +47,14 @@ class Brand extends Model
             ->first();
 
         return $obj ? $obj->fill($attributes) : static::create($attributes);
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'brand', 'name');
     }
 }

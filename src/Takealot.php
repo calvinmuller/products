@@ -22,7 +22,7 @@ class Takealot extends Api
     public function find($id, $raw = false)
     {
 
-        $product = Product::findOrCreate($id);
+        $product = Product::findOrCreate($id, self::class);
 
         $item = json_decode($this->get("productline/$id")
             ->getBody())->response;
@@ -36,21 +36,26 @@ class Takealot extends Api
         $ref = object_get($item, 'skus')[0]->id;
 
         $data = [
-            'external_id' => $id,
             'name' => $item->title,
             'reference_id' => $ref,
-            'category_name' => $item->categories[0]->name,
+            'external_id' => $id,
             'brand' => object_get($item, 'brand.name'),
-            'class' => \TakealotApi\Product::class,
-            'description' => $item->description,
+            'class' => self::class,
             'price' => $item->selling_price,
             'retail_price' => $item->old_selling_price,
-            'data' => object_get($item, 'meta'),
             'old_selling_price' => object_get($item, 'old_selling_price'),
+
+            'category_name' => $item->categories[0]->name,
+            'description' => $item->description_text,
+            'html_description' => $item->description,
+
+            'data' => object_get($item, 'meta'),
             'saving' => object_get($item, 'saving'),
             'is_on_special' => object_get($item, 'is_on_special'),
             'stock_on_hand' => object_get($item, 'stock_on_hand'),
             'date_released' => object_get($item, 'date_released'),
+            'sku' => $ref,
+            'star_rating' => $item->star_rating
         ];
 
         $product->fill($data)->save();
@@ -58,7 +63,7 @@ class Takealot extends Api
         $this->processAssets($product, $item->images);
         $this->processVariations($product, $item->skus);
 
-        $product->load(['assets', 'variations', 'brand']);
+        $product->load(['assets', 'variations', 'designer']);
 
         return $product;
     }

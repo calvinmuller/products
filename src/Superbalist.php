@@ -3,9 +3,10 @@
 namespace Istreet\Products;
 
 
+use Istreet\Products\Interfaces\ProductLoader;
 use Superbalist\Product as SProduct;
 
-class Superbalist
+class Superbalist implements ProductLoader
 {
 
     private $api;
@@ -24,7 +25,7 @@ class Superbalist
     public function find($id, $raw = false)
     {
 
-        $product = Product::findOrCreate($id, \Superbalist\Product::class);
+        $product = Product::findOrCreate($id, self::class);
 
         $item = json_decode($this->api->find($id)->getBody());
 
@@ -33,24 +34,25 @@ class Superbalist
         }
 
         $data = [
-            'name' => $item->name,
+            'name' =>  $item->page_impression->payload->page->title,
             'reference_id' => $item->id,
             'brand' => $item->designer,
-            'class' => \Superbalist\Product::class,
+            'class' => self::class,
             'price' => ($item->special_price) ? $item->special_price * 100 : $item->price * 100,
             'retail_price' => $item->retail_price * 100,
             'old_selling_price' => $item->retail_price * 100,
-            'discovery' => $item->discovery,
-            'ebucks' => $item->ebucks,
             'data' => $item->data,
             'external_id' => $id,
             'category_name' => object_get($item, 'category_name'),
             'description' => $item->description,
+            'html_description' => $item->html_description,
             'saving' => object_get($item, 'percentage_reduced'),
             'is_on_special' => $item->special_price ? true : false,
             'stock_on_hand' => object_get($item, 'stock_quantity'),
             'date_released' => object_get($item, 'date_released'),
             'status' => $item->status,
+            'variation_name' => $item->variation_name,
+            'sku' => $item->data->{"Style Code"}
         ];
 
         $product->fill($data)->save();
@@ -68,7 +70,7 @@ class Superbalist
      * @param Product $product
      * @param $assets
      */
-    private function processAssets(Product $product, $assets)
+    public function processAssets(Product $product, $assets)
     {
         foreach ($assets as $item) {
             $product->assets()->updateOrCreate([
@@ -89,7 +91,7 @@ class Superbalist
      * @param Product $product
      * @param $variations
      */
-    private function processVariations(Product $product, $variations)
+    public function processVariations(Product $product, $variations)
     {
         foreach ($variations as $item) {
             $product->variations()->updateOrCreate([
@@ -98,7 +100,7 @@ class Superbalist
                 'quantity' => $item->quantity,
                 'sku_id' => $item->sku_id,
                 'sku' => $item->sku_id,
-                'price' => $item->price * 100,
+                'price' => ($item->special_price) ? $item->special_price * 100 : $item->price * 100,
                 'status' => $item->status,
                 'name' => $item->name,
             ]);
@@ -106,4 +108,8 @@ class Superbalist
     }
 
 
+    public function processBrand(Product $product, $brand)
+    {
+        // TODO: Implement processBrand() method.
+    }
 }

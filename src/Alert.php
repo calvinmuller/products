@@ -14,7 +14,8 @@ class Alert extends Model
         'user_id',
         'variation',
         'info',
-        'preferred_method'
+        'preferred_method',
+        'price'
     ];
 
     protected $dates = ['deleted_at'];

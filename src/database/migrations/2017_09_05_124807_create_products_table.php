@@ -32,10 +32,8 @@ class CreateProductsTable extends Migration
                 ->nullable()
                 ->default(0);
 
-            $table->decimal('discovery')->nullable();
-            $table->decimal('ebucks')->nullable();
-            $table->decimal('price', 10, 2)->nullable();
-            $table->decimal('retail_price', 10, 2)->nullable();
+            $table->bigInteger('price')->nullable();
+            $table->bigInteger('retail_price')->nullable();
 
             $table->json('data');
 

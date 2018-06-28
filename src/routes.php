@@ -5,14 +5,18 @@
 //});
 $namespace = 'Istreet\Products\Controllers';
 
-Route::group(['prefix' => 'api/products', 'middleware' => 'api', 'namespace' => $namespace], function ($router) {
+Route::name('api.')->prefix('api')->middleware(['api'])->namespace($namespace)->group(function ($router) {
+    $router->apiResource('brand', 'Api\BrandsController');
+    $router->apiResource('brand.products', 'Api\BrandsProductsController');
 
-    $router->post('/search', 'Api\SearchController@index');
-    $router->get('/{product}', 'ProductController@show');
+    $router->post('products/search', 'Api\SearchController@index');
+    $router->get('products/{product}', 'ProductController@show');
 
     $router->group(['middleware' => 'auth:api'], function ($router) {
-        $router->get('/', 'ProductController@index');
-        $router->post('{product}/alert', 'Api\AlertController@store');
-    });
+        $router->get('products', 'ProductController@index');
 
+        $router->get('products/{product}/alert', 'Api\AlertController@index');
+        $router->get('products/{product}/variations/{variation}/alert', 'Api\AlertController@index');
+        $router->post('products/{product}/variations/{variation}/alert', 'Api\AlertController@store');
+    });
 });

@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Istreet\Products\Commands\SpreeIndex;
 use Istreet\Products\Commands\SuperbalistIndex;
 use Istreet\Products\Commands\TakealotIndex;
+use Istreet\Products\Commands\ZandoIndex;
 
 class ProductsServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,7 @@ class ProductsServiceProvider extends ServiceProvider
                 SuperbalistIndex::class,
                 TakealotIndex::class,
                 SpreeIndex::class,
+                ZandoIndex::class,
             ]);
         }
     }

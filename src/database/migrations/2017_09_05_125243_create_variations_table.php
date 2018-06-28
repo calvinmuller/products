@@ -20,7 +20,7 @@ class CreateVariationsTable extends Migration
             $table->integer('quantity')->nullable()
                 ->default(0);
             $table->bigInteger('sku_id');
-            $table->decimal('price', 10, 2);
+            $table->bigInteger('price');
 
             $table->string('status');
             $table->string('name')->nullable();

@@ -15,10 +15,8 @@ class CreateAlertsTable extends Migration
     {
         Schema::create('alerts', function (Blueprint $table) {
             $table->increments('id');
-
-            $table->integer('product_id');
             $table->integer('user_id');
-            $table->integer('variation')->nullable();
+            $table->integer('variation_id')->nullable();
             $table->bigInteger('price')->nullable();
             $table->string('info')->nullable();
             $table->enum('preferred_method', ['EMAIL', 'SMS'])->default('EMAIL');

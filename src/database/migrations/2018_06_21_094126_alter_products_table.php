@@ -17,12 +17,15 @@ class AlterProductsTable extends Migration
         Schema::table('products', function (Blueprint $table) {
 
             $table->string('slug')->nullable();
-            $table->integer('old_selling_price')->nullable();
+            $table->bigInteger('old_selling_price')->nullable();
+            $table->integer('star_rating')->default(0);
             $table->string('external_id')->index();
             $table->string('saving')->nullable();
             $table->boolean('is_on_special')->default(false);
             $table->integer('stock_on_hand')->nullable();
             $table->dateTime('date_released')->nullable();
+            $table->string('variation_name')->nullable();
+            $table->longText('html_description')->nullable();
         });
 
     }

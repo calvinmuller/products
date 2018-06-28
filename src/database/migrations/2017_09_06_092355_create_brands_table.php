@@ -17,7 +17,7 @@ class CreateBrandsTable extends Migration
             $table->increments('id');
 
             $table->integer('reference_id');
-
+            $table->string('class')->nullable();
             $table->string('name')->index();
             $table->string('slug');
 

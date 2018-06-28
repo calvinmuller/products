@@ -16,6 +16,7 @@ class AlterVariationsTable extends Migration
         Schema::table('variations', function (Blueprint $table) {
             //
             $table->string('sku')->nullable();
+            $table->bigInteger('retail_price')->nullable();
         });
     }
 
@@ -29,6 +30,7 @@ class AlterVariationsTable extends Migration
         Schema::table('variations', function (Blueprint $table) {
             //
             $table->dropColumn('sku');
+            $table->dropColumn('retail_price');
         });
     }
 }
